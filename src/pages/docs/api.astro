@@ -1,0 +1,139 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const pageTitle = 'Strata Local API Reference – OpenAI & Anthropic Compatible Endpoints';
+const pageDescription = 'Connect Python, TypeScript, Continue.dev, and Cursor to Strata LLM. Full documentation for OpenAI and Anthropic compatible REST API endpoints on localhost:8080.';
+---
+
+<Layout title={pageTitle} description={pageDescription}>
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    
+    <!-- Breadcrumbs -->
+    <nav class="font-mono text-xs text-strata-muted mb-6 flex items-center gap-2">
+      <a href="/" class="hover:text-white transition-colors">Home</a>
+      <span>/</span>
+      <span class="text-slate-400">Docs</span>
+      <span>/</span>
+      <span class="text-strata-cyan">API Integration</span>
+    </nav>
+
+    <!-- Header -->
+    <div class="max-w-3xl mb-12 space-y-3">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-strata-cyan/15 border border-strata-cyan/30 text-strata-cyan text-xs font-mono font-bold uppercase tracking-wider">
+        <span>REST API &amp; SDKs</span>
+      </div>
+      <h1 class="text-3xl sm:text-5xl font-black font-mono text-white tracking-tight uppercase">
+        OpenAI &amp; Anthropic Compatible API
+      </h1>
+      <p class="text-slate-300 text-sm sm:text-base font-sans leading-relaxed">
+        Strata includes an embedded high-concurrency web server listening on <code class="text-strata-cyan bg-strata-card px-1.5 py-0.5 rounded border border-strata-border">http://localhost:8080</code>. It functions as a drop-in replacement for OpenAI and Anthropic cloud APIs.
+      </p>
+    </div>
+
+    <!-- API Base URLs Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10 font-mono text-xs">
+      <div class="p-4 rounded-2xl bg-strata-card border border-strata-border">
+        <span class="text-strata-muted text-[10px] uppercase block mb-1">OpenAI Compatible Endpoint</span>
+        <code class="text-strata-cyan text-sm font-bold block">http://localhost:8080/v1</code>
+        <span class="text-slate-400 text-[11px] mt-1 block">Supports /chat/completions, /completions, and /models</span>
+      </div>
+
+      <div class="p-4 rounded-2xl bg-strata-card border border-strata-border">
+        <span class="text-strata-muted text-[10px] uppercase block mb-1">Anthropic Compatible Endpoint</span>
+        <code class="text-strata-emerald text-sm font-bold block">http://localhost:8080/anthropic/v1</code>
+        <span class="text-slate-400 text-[11px] mt-1 block">Supports /messages format with streaming</span>
+      </div>
+    </div>
+
+    <!-- Code Examples Stack -->
+    <div class="space-y-10">
+      
+      <!-- Python SDK Example -->
+      <section id="python" class="space-y-3">
+        <div class="flex items-center justify-between">
+          <h2 class="font-mono font-bold text-white text-lg">1. Python Client (OpenAI SDK)</h2>
+          <span class="text-xs font-mono text-strata-muted">pip install openai</span>
+        </div>
+        <pre is:raw class="p-5 rounded-2xl bg-strata-card border border-strata-border text-slate-200 font-mono text-xs overflow-x-auto leading-relaxed select-all"><code>from openai import OpenAI
+
+client = OpenAI(
+    base_url="http://localhost:8080/v1",
+    api_key="strata-local-token"  # Any string works locally
+)
+
+response = client.chat.completions.create(
+    model="qwen3.8-125b-q4",
+    messages=[
+        {"role": "system", "content": "You are a senior system architect."},
+        {"role": "user", "content": "Explain how sparse MoE routing works in 3 bullet points."}
+    ],
+    temperature=0.7,
+    stream=True
+)
+
+for chunk in response:
+    content = chunk.choices[0].delta.content or ""
+    print(content, end="", flush=True)</code></pre>
+      </section>
+
+      <!-- TypeScript / Node.js -->
+      <section id="typescript" class="space-y-3">
+        <div class="flex items-center justify-between">
+          <h2 class="font-mono font-bold text-white text-lg">2. TypeScript / Node.js</h2>
+          <span class="text-xs font-mono text-strata-muted">npm install openai</span>
+        </div>
+        <pre is:raw class="p-5 rounded-2xl bg-strata-card border border-strata-border text-slate-200 font-mono text-xs overflow-x-auto leading-relaxed select-all"><code>import OpenAI from 'openai';
+
+const openai = new OpenAI({
+  baseURL: 'http://localhost:8080/v1',
+  apiKey: 'strata-local',
+});
+
+async function main() {
+  const stream = await openai.chat.completions.create({
+    model: 'qwen3.8-125b-q4',
+    messages: [{ role: 'user', content: 'Write a quicksort in Rust.' }],
+    stream: true,
+  });
+
+  for await (const chunk of stream) {
+    process.stdout.write(chunk.choices[0]?.delta?.content || '');
+  }
+}
+
+main();</code></pre>
+      </section>
+
+      <!-- Continue.dev & Cursor Integration -->
+      <section id="continue" class="space-y-3">
+        <h2 class="font-mono font-bold text-white text-lg">3. Continue.dev (VS Code / JetBrains) Config</h2>
+        <p class="text-xs text-slate-300 font-sans">
+          Add the following block into your <code class="text-strata-cyan">~/.continue/config.json</code> to use Strata as your free offline local coding assistant:
+        </p>
+        <pre class="p-5 rounded-2xl bg-strata-card border border-strata-border text-strata-cyan font-mono text-xs overflow-x-auto leading-relaxed select-all"><code>&#123;
+  "models": [
+    &#123;
+      "title": "Strata Qwen 125B (Local)",
+      "provider": "openai",
+      "model": "qwen3.8-125b-q4",
+      "apiBase": "http://localhost:8080/v1",
+      "apiKey": "local"
+    &#125;
+  ]
+&#125;</code></pre>
+      </section>
+
+    </div>
+
+    <!-- Navigation Footer -->
+    <div class="mt-12 flex justify-between items-center pt-6 border-t border-strata-border text-xs font-mono">
+      <a href="/docs/models/" class="text-strata-muted hover:text-white transition-colors">
+        ← Supported Models
+      </a>
+      <a href="/docs/troubleshooting/" class="text-strata-cyan hover:underline">
+        Troubleshooting Guide →
+      </a>
+    </div>
+
+  </div>
+</Layout>

@@ -1,0 +1,121 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const pageTitle = 'Strata LLM Quickstart – Windows & Linux Installation Guide (START-HERE.bat)';
+const pageDescription = 'Step-by-step setup guide for Strata LLM. Learn how to launch the one-click START-HERE.bat installer on Windows or deploy via setup.sh on Linux and WSL2.';
+---
+
+<Layout title={pageTitle} description={pageDescription}>
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    
+    <!-- Breadcrumbs -->
+    <nav class="font-mono text-xs text-strata-muted mb-6 flex items-center gap-2">
+      <a href="/" class="hover:text-white transition-colors">Home</a>
+      <span>/</span>
+      <span class="text-slate-400">Docs</span>
+      <span>/</span>
+      <span class="text-strata-cyan">Quickstart</span>
+    </nav>
+
+    <!-- Header -->
+    <div class="max-w-3xl mb-12 space-y-3">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-strata-cyan/15 border border-strata-cyan/30 text-strata-cyan text-xs font-mono font-bold uppercase tracking-wider">
+        <span>Installation Guide</span>
+      </div>
+      <h1 class="text-3xl sm:text-5xl font-black font-mono text-white tracking-tight uppercase">
+        Strata Quickstart Guide
+      </h1>
+      <p class="text-slate-300 text-sm sm:text-base font-sans leading-relaxed">
+        Get Strata up and running on your local machine in under 5 minutes. Select your operating system below:
+      </p>
+    </div>
+
+    <!-- Operating System Tabs / Guides -->
+    <div class="space-y-12">
+      
+      <!-- Windows Guide -->
+      <section id="windows" class="p-6 sm:p-8 rounded-3xl bg-strata-card border border-strata-border space-y-6">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-blue-500/20 border border-blue-500/40 flex items-center justify-center text-xl">
+            🪟
+          </div>
+          <div>
+            <h2 class="font-mono font-bold text-white text-xl">Windows 10 / 11 Installation</h2>
+            <span class="text-xs text-strata-muted font-mono">Recommended for NVIDIA RTX 30/40/50 series GPUs</span>
+          </div>
+        </div>
+
+        <div class="space-y-4 text-xs sm:text-sm font-sans text-slate-300">
+          <p>
+            Strata provides a turnkey Windows launcher that bundles isolated dependencies, avoiding conflicts with system Python installations.
+          </p>
+
+          <div class="space-y-2">
+            <strong class="font-mono text-white text-xs uppercase block">Step 1: Clone or Download Repository</strong>
+            <pre class="p-4 rounded-xl bg-strata-void border border-strata-border text-strata-cyan font-mono text-xs overflow-x-auto select-all"><code>git clone https://github.com/Niko1221/Strata.git
+cd Strata</code></pre>
+          </div>
+
+          <div class="space-y-2">
+            <strong class="font-mono text-white text-xs uppercase block">Step 2: Run the One-Click Launcher</strong>
+            <p class="text-xs text-slate-400">
+              Double-click <code class="text-strata-cyan bg-strata-void px-1.5 py-0.5 rounded border border-strata-border">START-HERE.bat</code> in File Explorer, or execute it from PowerShell:
+            </p>
+            <pre class="p-4 rounded-xl bg-strata-void border border-strata-border text-strata-emerald font-mono text-xs overflow-x-auto select-all"><code>.\START-HERE.bat</code></pre>
+          </div>
+
+          <div class="space-y-2">
+            <strong class="font-mono text-white text-xs uppercase block">What the script automatically executes:</strong>
+            <ul class="list-disc list-inside text-xs text-slate-400 space-y-1 pl-2">
+              <li>Detects CUDA compute architecture (sm_80, sm_86, sm_89, sm_90)</li>
+              <li>Installs PyTorch and specialized sparse-attention kernels</li>
+              <li>Downloads default quantized Qwen3.8-Flash-Next 125B weights from HuggingFace mirror</li>
+              <li>Initializes local Web UI at <code class="text-white">http://localhost:8080</code></li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Linux & WSL2 Guide -->
+      <section id="linux" class="p-6 sm:p-8 rounded-3xl bg-strata-card border border-strata-border space-y-6">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-strata-emerald/20 border border-strata-emerald/40 flex items-center justify-center text-xl">
+            🐧
+          </div>
+          <div>
+            <h2 class="font-mono font-bold text-white text-xl">Linux (Ubuntu / Debian / Arch) &amp; WSL2</h2>
+            <span class="text-xs text-strata-muted font-mono">Requires NVIDIA Driver 535+ &amp; CUDA Toolkit 12.x</span>
+          </div>
+        </div>
+
+        <div class="space-y-4 text-xs sm:text-sm font-sans text-slate-300">
+          <div class="space-y-2">
+            <strong class="font-mono text-white text-xs uppercase block">Automated Installation Script</strong>
+            <pre class="p-4 rounded-xl bg-strata-void border border-strata-border text-strata-cyan font-mono text-xs overflow-x-auto select-all"><code>git clone https://github.com/Niko1221/Strata.git
+cd Strata
+chmod +x setup.sh
+./setup.sh --model qwen3.8-125b-q4</code></pre>
+          </div>
+
+          <div class="space-y-2">
+            <strong class="font-mono text-white text-xs uppercase block">Run as Background Systemd Service</strong>
+            <pre class="p-4 rounded-xl bg-strata-void border border-strata-border text-slate-300 font-mono text-xs overflow-x-auto select-all"><code>./setup.sh --install-service
+sudo systemctl status strata-engine</code></pre>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- Next Navigation Links -->
+    <div class="mt-12 flex justify-between items-center pt-6 border-t border-strata-border text-xs font-mono">
+      <a href="/" class="text-strata-muted hover:text-white transition-colors">
+        ← Back to Overview
+      </a>
+      <a href="/docs/models/" class="text-strata-cyan hover:underline">
+        Supported Models Guide →
+      </a>
+    </div>
+
+  </div>
+</Layout>

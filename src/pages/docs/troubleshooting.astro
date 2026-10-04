@@ -1,0 +1,126 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const pageTitle = 'Strata LLM Troubleshooting & Performance Tuning (CUDA OOM, RAM Latency)';
+const pageDescription = 'Resolve common Strata LLM issues: fix CUDA out-of-memory errors, resolve Windows virtualalloc pagefile crashes, and optimize DDR5 PCIe streaming for 30+ tok/s.';
+
+const issues = [
+  {
+    title: '1. CUDA Out of Memory (OOM) During Long Context Ingestion',
+    symptom: 'Engine crashes with "RuntimeError: CUDA out of memory. Tried to allocate 1.80 GiB"',
+    cause: 'The KV cache expands with context length and exceeded remaining VRAM headroom on a 12GB GPU.',
+    solution: [
+      'Reduce context window from 128K to 32K or 64K using: --max-context 65536',
+      'Enable FP8 KV cache quantization: --kv-cache-dtype fp8',
+      'Lower VRAM allocation threshold to reserve 1.5GB for Windows DWM: --vram-utilization 0.85',
+    ],
+  },
+  {
+    title: '2. Generation Stutter or Slow Speed (< 6 Tokens/sec)',
+    symptom: 'Tokens generate slowly with periodic 1-2 second freezes between sentences.',
+    cause: 'System RAM bandwidth bottleneck or weights stored on a mechanical hard drive/slow SATA SSD.',
+    solution: [
+      'Ensure the model file resides on a high-speed PCIe 3.0/4.0 NVMe SSD (M.2 drive).',
+      'Verify in BIOS that RAM is operating in Dual Channel mode with XMP / EXPO memory profiles enabled (minimum DDR4-3200 or DDR5-5600). Single channel memory halves transfer bandwidth.',
+      'Close background browsers or RAM-heavy applications to prevent Windows from paging model weights to disk.',
+    ],
+  },
+  {
+    title: '3. Windows VirtualAlloc / Pagefile Out of Memory Error',
+    symptom: 'Console outputs: "OSError: [WinError 1455] The paging file is too small for this operation to complete."',
+    cause: 'Windows default automatic pagefile size is too small to back 64GB+ of mapped tensor memory.',
+    solution: [
+      'Open Windows System Properties -> Advanced -> Performance Settings -> Advanced -> Virtual Memory.',
+      'Uncheck "Automatically manage paging file size for all drives".',
+      'Select your fastest NVMe SSD and set Custom Size: Initial Size: 32768 MB (32GB), Maximum Size: 65536 MB (64GB).',
+      'Click "Set" and restart your computer.',
+    ],
+  },
+  {
+    title: '4. WSL2 Fails to Detect NVIDIA GPU',
+    symptom: 'Running nvidia-smi inside Ubuntu WSL2 reports "No devices were found".',
+    cause: 'Installing native Linux display drivers inside WSL2 breaks the Microsoft D3D12/DirectX virtual passthrough layer.',
+    solution: [
+      'Only install the latest Game Ready or Studio Driver on the Windows host machine.',
+      'Do NOT run apt-get install nvidia-driver inside WSL2.',
+      'Install only the CUDA toolkit user-mode libraries: apt-get install -y cuda-toolkit-12-x',
+    ],
+  },
+];
+---
+
+<Layout title={pageTitle} description={pageDescription}>
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    
+    <!-- Breadcrumbs -->
+    <nav class="font-mono text-xs text-strata-muted mb-6 flex items-center gap-2">
+      <a href="/" class="hover:text-white transition-colors">Home</a>
+      <span>/</span>
+      <span class="text-slate-400">Docs</span>
+      <span>/</span>
+      <span class="text-strata-cyan">Troubleshooting</span>
+    </nav>
+
+    <!-- Header -->
+    <div class="max-w-3xl mb-12 space-y-3">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-500/15 border border-rose-500/30 text-rose-400 text-xs font-mono font-bold uppercase tracking-wider">
+        <span>Debugging &amp; Performance Tuning</span>
+      </div>
+      <h1 class="text-3xl sm:text-5xl font-black font-mono text-white tracking-tight uppercase">
+        Troubleshooting Guide
+      </h1>
+      <p class="text-slate-300 text-sm sm:text-base font-sans leading-relaxed">
+        Encountering errors while compiling sparse kernels or loading 125B weights? Consult these verified resolutions for hardware edge-cases:
+      </p>
+    </div>
+
+    <!-- Troubleshooting Issues Stack -->
+    <div class="space-y-8">
+      {issues.map((item) => (
+        <article class="p-6 sm:p-8 rounded-3xl bg-strata-card border border-strata-border space-y-4">
+          <h2 class="font-mono font-bold text-white text-lg sm:text-xl">
+            {item.title}
+          </h2>
+
+          <div class="p-3 rounded-xl bg-rose-950/20 border border-rose-900/40 text-xs font-mono text-rose-300">
+            <strong class="uppercase text-[10px] block mb-0.5">Symptom:</strong>
+            {item.symptom}
+          </div>
+
+          <p class="text-xs text-slate-300 font-sans leading-relaxed">
+            <strong class="text-strata-muted">Root Cause:</strong> {item.cause}
+          </p>
+
+          <div class="pt-2 border-t border-strata-border/80">
+            <strong class="font-mono text-xs text-strata-emerald uppercase block mb-2">Resolution Checklist:</strong>
+            <ul class="space-y-1.5 text-xs text-slate-200 font-sans list-disc list-inside">
+              {item.solution.map((sol) => (
+                <li>{sol}</li>
+              ))}
+            </ul>
+          </div>
+        </article>
+      ))}
+    </div>
+
+    <!-- Bottom Help Banner -->
+    <div class="mt-12 p-6 rounded-2xl bg-strata-card/60 border border-strata-border text-center space-y-2">
+      <h3 class="font-mono font-bold text-white text-sm">Need Additional Developer Support?</h3>
+      <p class="text-xs text-strata-muted font-sans">
+        Submit bug reports or pull requests directly to Niko1221's official repository on GitHub.
+      </p>
+      <div class="pt-2">
+        <a
+          href="https://github.com/Niko1221/Strata/issues"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-strata-void border border-strata-border text-strata-cyan font-mono text-xs hover:border-strata-cyan transition-all"
+        >
+          <span>Open GitHub Issue</span>
+          <span>↗</span>
+        </a>
+      </div>
+    </div>
+
+  </div>
+</Layout>

@@ -1,0 +1,135 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const pageTitle = 'Supported Models & Quantization – Strata LLM (Qwen 125B, DeepSeek MoE, Mixtral)';
+const pageDescription = 'Explore all Mixture-of-Experts (MoE) models supported by Strata LLM. Compare memory footprints, quantization formats, and download commands for Qwen 125B and Mixtral.';
+
+const models = [
+  {
+    name: 'Qwen3.8-Flash-Next (125B MoE)',
+    developer: 'Alibaba Cloud / Qwen Team',
+    architecture: '64 Experts (8 Active per Token)',
+    totalParams: '125 Billion',
+    activeParams: '14 Billion',
+    recommendedQuant: 'Q4_K_M (GGUF / Strata-Bin)',
+    minVram: '11.5 GB',
+    minRam: '52 GB',
+    contextWindow: '128K Tokens',
+    highlights: 'The primary model Strata was designed for. Rivals Claude 3.5 Sonnet on programming benchmarks while generating at 20-35 tok/s on an RTX 4070.',
+    launchCmd: 'strata-cli run --model qwen3.8-125b-q4 --vram 11.5 --ram 52',
+  },
+  {
+    name: 'DeepSeek-V2-Lite MoE (16B / 236B)',
+    developer: 'DeepSeek AI',
+    architecture: 'Multi-head Latent Attention (MLA) + MoE',
+    totalParams: '16B / 236B',
+    activeParams: '2.4B / 21B',
+    recommendedQuant: 'Q4_K_S',
+    minVram: '10.0 GB',
+    minRam: '38 GB',
+    contextWindow: '64K Tokens',
+    highlights: 'Extreme efficiency with Multi-head Latent Attention, reducing KV cache consumption by 70%.',
+    launchCmd: 'strata-cli run --model deepseek-v2-lite --vram 10.0',
+  },
+  {
+    name: 'Mixtral 8x22B Instruct',
+    developer: 'Mistral AI',
+    architecture: '8 Experts (2 Active per Token)',
+    totalParams: '141 Billion',
+    activeParams: '39 Billion',
+    recommendedQuant: 'Q3_K_M / Q4_K_M',
+    minVram: '15.5 GB',
+    minRam: '70 GB',
+    contextWindow: '64K Tokens',
+    highlights: 'Strong reasoning and European multilingual capabilities. Recommended for RTX 4080 (16GB) or higher.',
+    launchCmd: 'strata-cli run --model mixtral-8x22b-instruct --vram 15.5 --ram 70',
+  },
+];
+---
+
+<Layout title={pageTitle} description={pageDescription}>
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    
+    <!-- Breadcrumbs -->
+    <nav class="font-mono text-xs text-strata-muted mb-6 flex items-center gap-2">
+      <a href="/" class="hover:text-white transition-colors">Home</a>
+      <span>/</span>
+      <span class="text-slate-400">Docs</span>
+      <span>/</span>
+      <span class="text-strata-cyan">Supported Models</span>
+    </nav>
+
+    <!-- Header -->
+    <div class="max-w-3xl mb-12 space-y-3">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-strata-emerald/15 border border-strata-emerald/30 text-strata-emerald text-xs font-mono font-bold uppercase tracking-wider">
+        <span>MoE Architecture Catalog</span>
+      </div>
+      <h1 class="text-3xl sm:text-5xl font-black font-mono text-white tracking-tight uppercase">
+        Supported Models
+      </h1>
+      <p class="text-slate-300 text-sm sm:text-base font-sans leading-relaxed">
+        Strata is optimized for sparse Mixture-of-Experts architectures where only a fraction of weights activate per token. Below are verified production models and memory allocation presets:
+      </p>
+    </div>
+
+    <!-- Models List -->
+    <div class="space-y-8">
+      {models.map((model) => (
+        <article class="p-6 sm:p-8 rounded-3xl bg-strata-card border border-strata-border hover:border-strata-cyan/50 transition-all space-y-6">
+          <div class="flex flex-wrap items-start justify-between gap-4 border-b border-strata-border/80 pb-4">
+            <div>
+              <span class="text-xs font-mono text-strata-muted block">{model.developer}</span>
+              <h2 class="text-2xl font-mono font-black text-white">{model.name}</h2>
+            </div>
+            <div class="flex items-center gap-2 text-xs font-mono">
+              <span class="px-2.5 py-1 rounded-lg bg-strata-void border border-strata-border text-strata-cyan font-bold">
+                {model.architecture}
+              </span>
+            </div>
+          </div>
+
+          <p class="text-sm font-sans text-slate-300 leading-relaxed">
+            {model.highlights}
+          </p>
+
+          <!-- Spec Matrix Grid -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 font-mono text-xs">
+            <div class="p-3 rounded-xl bg-strata-void border border-strata-border">
+              <span class="text-strata-muted text-[10px] uppercase block">Total / Active</span>
+              <strong class="text-white text-xs">{model.totalParams} ({model.activeParams})</strong>
+            </div>
+            <div class="p-3 rounded-xl bg-strata-void border border-strata-border">
+              <span class="text-strata-muted text-[10px] uppercase block">Min VRAM</span>
+              <strong class="text-strata-cyan text-xs">{model.minVram}</strong>
+            </div>
+            <div class="p-3 rounded-xl bg-strata-void border border-strata-border">
+              <span class="text-strata-muted text-[10px] uppercase block">Min System RAM</span>
+              <strong class="text-strata-emerald text-xs">{model.minRam}</strong>
+            </div>
+            <div class="p-3 rounded-xl bg-strata-void border border-strata-border">
+              <span class="text-strata-muted text-[10px] uppercase block">Context Window</span>
+              <strong class="text-white text-xs">{model.contextWindow}</strong>
+            </div>
+          </div>
+
+          <!-- Launch CLI command -->
+          <div class="space-y-1.5 font-mono text-xs">
+            <span class="text-strata-muted text-[11px] uppercase block">Terminal Launch Command:</span>
+            <pre class="p-3 rounded-xl bg-strata-void border border-strata-border text-strata-cyan overflow-x-auto select-all"><code>{model.launchCmd}</code></pre>
+          </div>
+        </article>
+      ))}
+    </div>
+
+    <!-- Navigation Footer -->
+    <div class="mt-12 flex justify-between items-center pt-6 border-t border-strata-border text-xs font-mono">
+      <a href="/docs/quickstart/" class="text-strata-muted hover:text-white transition-colors">
+        ← Installation Guide
+      </a>
+      <a href="/docs/api/" class="text-strata-cyan hover:underline">
+        OpenAI API &amp; SDK Guide →
+      </a>
+    </div>
+
+  </div>
+</Layout>
