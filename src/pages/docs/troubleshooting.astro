@@ -63,8 +63,8 @@ const issues = [
 
     <!-- Header -->
     <div class="max-w-3xl mb-12 space-y-3">
-      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-500/15 border border-rose-500/30 text-rose-400 text-xs font-mono font-bold uppercase tracking-wider">
-        <span>Debugging &amp; Performance Tuning</span>
+      <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded bg-strata-card border border-strata-border text-slate-300 text-xs font-mono uppercase tracking-wider">
+        <span>Debugging &amp; Diagnostics</span>
       </div>
       <h1 class="text-3xl sm:text-5xl font-black font-mono text-white tracking-tight uppercase">
         Troubleshooting Guide
@@ -82,17 +82,17 @@ const issues = [
             {item.title}
           </h2>
 
-          <div class="p-3 rounded-xl bg-rose-950/20 border border-rose-900/40 text-xs font-mono text-rose-300">
-            <strong class="uppercase text-[10px] block mb-0.5">Symptom:</strong>
+          <div class="p-3 rounded-lg bg-strata-dark border border-strata-border text-xs font-mono text-slate-200">
+            <strong class="uppercase text-[10px] text-slate-400 block mb-0.5">Symptom:</strong>
             {item.symptom}
           </div>
 
           <p class="text-xs text-slate-300 font-sans leading-relaxed">
-            <strong class="text-strata-muted">Root Cause:</strong> {item.cause}
+            <strong class="text-slate-400">Root Cause:</strong> {item.cause}
           </p>
 
           <div class="pt-2 border-t border-strata-border/80">
-            <strong class="font-mono text-xs text-strata-emerald uppercase block mb-2">Resolution Checklist:</strong>
+            <strong class="font-mono text-xs text-slate-300 uppercase block mb-2">Resolution Checklist:</strong>
             <ul class="space-y-1.5 text-xs text-slate-200 font-sans list-disc list-inside">
               {item.solution.map((sol) => (
                 <li>{sol}</li>
