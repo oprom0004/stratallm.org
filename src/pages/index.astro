@@ -81,7 +81,7 @@ cd Strata
             href="/docs/quickstart/"
             class="px-6 py-3.5 rounded-xl bg-gradient-to-r from-strata-cyan to-blue-500 text-black font-mono font-bold text-xs uppercase tracking-wider shadow-glow-cyan hover:brightness-110 transition-all flex items-center gap-2"
           >
-            <span>📖 Read Setup Guide</span>
+            <span>Read Setup Guide</span>
             <span>→</span>
           </a>
           <a
@@ -257,7 +257,7 @@ cd Strata
           {BENCHMARKS_DATA.map((row) => (
             <tr class={row.engine.includes('Strata') ? 'bg-strata-cyan/5 font-semibold text-white' : 'text-slate-300'}>
               <td class="p-4 flex items-center gap-2">
-                {row.engine.includes('Strata') && <span class="text-strata-cyan">⚡</span>}
+                {row.engine.includes('Strata') && <span class="text-strata-cyan"></span>}
                 <span>{row.engine}</span>
               </td>
               <td class="p-4 text-slate-400">{row.hardware}</td>
